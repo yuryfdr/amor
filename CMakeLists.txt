@@ -39,7 +39,7 @@ find_package(KF6WidgetsAddons ${KF5_VERSION} CONFIG REQUIRED)
 find_package(XCB REQUIRED)
 
 
-ecm_setup_version(2.4.0 VARIABLE_PREFIX AMOR VERSION_HEADER src/version.h)
+ecm_setup_version(25.1.10 VARIABLE_PREFIX AMOR VERSION_HEADER src/version.h)
 
 
 # Search KDE installation
