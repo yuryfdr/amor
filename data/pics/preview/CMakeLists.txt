@@ -10,5 +10,5 @@ install( FILES
     eyes.png
     tao.png
     worm.png  
-  DESTINATION ${DATA_INSTALL_DIR}/amor/pics/preview)
+  DESTINATION ${KDE_INSTALL_DATADIR}/amor/pics/preview)
 

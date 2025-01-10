@@ -5,8 +5,8 @@ if (POLICY CMP0063)
     cmake_policy(SET CMP0063 NEW)
 endif()
 
-set(KF5_VERSION "5.101.0")
-set(QT_REQUIRED_VERSION "5.15.0")
+set(KF5_VERSION "6.7.0")
+set(QT_REQUIRED_VERSION "6.8.0")
 find_package(ECM ${KF5_VERSION} CONFIG REQUIRED)
 set(CMAKE_MODULE_PATH ${ECM_MODULE_PATH})
 include(ECMInstallIcons)
@@ -19,21 +19,21 @@ include(FeatureSummary)
 
 set(CMAKE_AUTOMOC ON)
 
-find_package(Qt5 ${QT_REQUIRED_VERSION} CONFIG REQUIRED
+find_package(Qt6 ${QT_REQUIRED_VERSION} CONFIG REQUIRED
     Core
     DBus
     Widgets
-    X11Extras
+    Gui
 )
 
-find_package(KF5DocTools ${KF5_VERSION} CONFIG REQUIRED)
-find_package(KF5DBusAddons ${KF5_VERSION} CONFIG REQUIRED)
-find_package(KF5CoreAddons ${KF5_VERSION} CONFIG REQUIRED)
-find_package(KF5I18n ${KF5_VERSION} CONFIG REQUIRED)
-find_package(KF5Config ${KF5_VERSION} CONFIG REQUIRED)
-find_package(KF5WindowSystem ${KF5_VERSION} CONFIG REQUIRED)
-find_package(KF5XmlGui ${KF5_VERSION} CONFIG REQUIRED)
-find_package(KF5WidgetsAddons ${KF5_VERSION} CONFIG REQUIRED)
+find_package(KF6DocTools ${KF5_VERSION} CONFIG REQUIRED)
+find_package(KF6DBusAddons ${KF5_VERSION} CONFIG REQUIRED)
+find_package(KF6CoreAddons ${KF5_VERSION} CONFIG REQUIRED)
+find_package(KF6I18n ${KF5_VERSION} CONFIG REQUIRED)
+find_package(KF6Config ${KF5_VERSION} CONFIG REQUIRED)
+find_package(KF6WindowSystem ${KF5_VERSION} CONFIG REQUIRED)
+find_package(KF6XmlGui ${KF5_VERSION} CONFIG REQUIRED)
+find_package(KF6WidgetsAddons ${KF5_VERSION} CONFIG REQUIRED)
 
 
 find_package(XCB REQUIRED)

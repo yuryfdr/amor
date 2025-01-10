@@ -20,7 +20,7 @@
 #include <QPixmap>
 #include <QBitmap>
 
-AmorPixmapManager *AmorPixmapManager::mManager = 0;
+AmorPixmapManager *AmorPixmapManager::mManager = nullptr;
 
 
 AmorPixmapManager::AmorPixmapManager()
@@ -52,7 +52,7 @@ void AmorPixmapManager::reset()
 const QPixmap* AmorPixmapManager::load(const QString & img)
 {
     QHash<QString, QPixmap*>::const_iterator it = mPixmaps.constFind( img );
-    QPixmap *pixmap = it != mPixmaps.constEnd() ? *it : 0;
+    QPixmap *pixmap = it != mPixmaps.constEnd() ? *it : nullptr;
 
     if( !pixmap ) {
         // pixmap has not yet been loaded.
@@ -65,7 +65,7 @@ const QPixmap* AmorPixmapManager::load(const QString & img)
         }
         else {
             delete pixmap;
-            pixmap = 0;
+            pixmap = nullptr;
         }
     }
 
@@ -75,7 +75,7 @@ const QPixmap* AmorPixmapManager::load(const QString & img)
 
 const QPixmap* AmorPixmapManager::pixmap(const QString & img) const
 {
-    return mPixmaps.contains( img ) ? mPixmaps[ img ] : 0;
+    return mPixmaps.contains( img ) ? mPixmaps[ img ] : nullptr;
 }
 
 

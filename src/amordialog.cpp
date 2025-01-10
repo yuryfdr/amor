@@ -136,7 +136,7 @@ void AmorDialog::addTheme(const QString& folder, const QString& file)
 {
     KConfig config(QStandardPaths::locate(QStandardPaths::GenericDataLocation,
                                           QStringLiteral("amor/%1").arg(file)));
-    KConfigGroup configGroup( &config, "Config" );
+    KConfigGroup configGroup( &config, QStringLiteral("Config") );
 
     QString pixmapPath = folder
                        + QDir::separator()
@@ -232,7 +232,7 @@ void AmorDialog::slotCancel()
 {
     // restore offset
     KSharedConfig::Ptr config = KSharedConfig::openConfig();
-    KConfigGroup cs( config, "General" );
+    KConfigGroup cs( config, QStringLiteral("General") );
     Q_EMIT offsetChanged( cs.readEntry( "Offset", 0 ) );
     reject();
 }

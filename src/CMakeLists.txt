@@ -6,7 +6,7 @@ set(amor_SRCS)
 
 ecm_qt_declare_logging_category(amor_SRCS HEADER amor_debug.h IDENTIFIER AMOR_LOG CATEGORY_NAME org.kde.amor)
 
-qt5_add_dbus_adaptor(amor_SRCS org.kde.amor.xml amor.h Amor)
+qt_add_dbus_adaptor(amor_SRCS org.kde.amor.xml amor.h Amor)
 
 add_executable(amor)
 target_sources(amor PRIVATE
@@ -34,19 +34,18 @@ target_sources(amor PRIVATE
         ${amor_SRCS}
     )
 target_link_libraries(amor
-    Qt5::Core
-    Qt5::DBus
-    Qt5::Gui
-    Qt5::Widgets
-    Qt5::X11Extras
+    Qt::Core
+    Qt::DBus
+    Qt::Gui
+    Qt::Widgets
 
-    KF5::CoreAddons
-    KF5::DBusAddons
-    KF5::WidgetsAddons
-    KF5::I18n
-    KF5::ConfigCore
-    KF5::WindowSystem
-    KF5::XmlGui
+    KF6::CoreAddons
+    KF6::DBusAddons
+    KF6::WidgetsAddons
+    KF6::I18n
+    KF6::ConfigCore
+    KF6::WindowSystem
+    KF6::XmlGui
 
     ${XCB_LIBRARIES}
 )

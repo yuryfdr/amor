@@ -25,7 +25,7 @@
 #include <QApplication>
 #include <QDBusConnection>
 
-static const char description[] = I18N_NOOP("KDE creature for your desktop");
+static const char description[] = /*I18N_NOOP(*/"KDE creature for your desktop";//);
 
 
 int main(int argc, char **argv)

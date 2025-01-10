@@ -46,7 +46,7 @@
 #include <KAboutData>
 
 #include <xcb/xcb.h>
-#include <QX11Info>
+//#include <QX11Info>
 
 // #define DEBUG_AMOR
 
@@ -88,11 +88,12 @@ Amor::Amor()
     mState       = Normal;
 
     mWin = KWindowSystem::self();
+    if(mWin->isPlatformX11()){
     mX11Win = KX11Extras::self();
-    connect(mWin, &KWindowSystem::activeWindowChanged, this, &Amor::slotWindowActivate);
-    connect(mWin, &KWindowSystem::windowRemoved, this, &Amor::slotWindowRemove);
-    connect(mWin, &KWindowSystem::stackingOrderChanged, this, &Amor::slotStackingChanged);
-    connect(mWin, QOverload<WId,NET::Properties,NET::Properties2>::of(&KWindowSystem::windowChanged),
+    connect(mX11Win, &KX11Extras::activeWindowChanged, this, &Amor::slotWindowActivate);
+    connect(mX11Win, &KX11Extras::windowRemoved, this, &Amor::slotWindowRemove);
+    connect(mX11Win, &KX11Extras::stackingOrderChanged, this, &Amor::slotStackingChanged);
+    connect(mX11Win, QOverload<WId,NET::Properties,NET::Properties2>::of(&KX11Extras::windowChanged),
             this, &Amor::slotWindowChange);
     connect(mX11Win, &KX11Extras::currentDesktopChanged, this, &Amor::slotDesktopChange);
 
@@ -116,7 +117,7 @@ Amor::Amor()
     connect( mCursorTimer, SIGNAL(timeout()), SLOT(slotCursorTimeout()) );
     mCursorTimer->start( 500 );
 
-    mNextTarget = mWin->activeWindow();
+    mNextTarget = mX11Win->activeWindow();
     selectAnimation( Focus );
     mTimer->setSingleShot( true );
     mTimer->start( 0 );
@@ -126,7 +127,9 @@ Amor::Amor()
     {
         qCDebug(AMOR_LOG) << "Could not attach DBus signal: org.freedesktop.ScreenSaver.ActiveChanged()";
     }
-
+    }else{
+        QMessageBox::critical(nullptr,tr("Error"),tr("Wayland not supported"));
+    }
     KStartupInfo::appStarted();
 }
 
@@ -351,8 +354,8 @@ void Amor::selectAnimation(State state)
 
             // if the animation falls outside of the working area,
             // then relocate it so that is inside the desktop again
-            QRect desktopArea = mWin->workArea(KWindowSystem::currentDesktop());
-            KWindowSystem::setOnDesktop(mAmor->winId(), KWindowSystem::currentDesktop());
+            QRect desktopArea = mX11Win->workArea(KX11Extras::currentDesktop());
+            KX11Extras::setOnDesktop(mAmor->winId(), KX11Extras::currentDesktop());
 
             bool fitsInWorkArea = mTargetRect.y() - mCurrAnim->hotspot().y() + mConfig.mOffset < desktopArea.y();
             if( windowInfo.hasState(NET::MaxVert) || fitsInWorkArea ) {
@@ -469,13 +472,14 @@ void Amor::restack()
     xcb_window_t sibling = mTargetWin;
     xcb_window_t dw, parent = XCB_NONE, *wins;
 
+    auto *x11Application = qGuiApp->nativeInterface<QNativeInterface::QX11Application>();
     do {
         unsigned int nwins = 0;
 
         // We must use the target window's parent as our sibling.
         // Is there a faster way to get parent window than XQueryTree?
-        const auto cookie = xcb_query_tree(QX11Info::connection(), sibling);
-        const auto reply = xcb_query_tree_reply(QX11Info::connection(), cookie, nullptr);
+        const auto cookie = xcb_query_tree(x11Application->connection(), sibling);
+        const auto reply = xcb_query_tree_reply(x11Application->connection(), cookie, nullptr);
         if (!reply) {
             return;
         }
@@ -494,7 +498,7 @@ void Amor::restack()
     // Set animation's stacking order to be above the window manager's
     // decoration of target window.
     const uint32_t values[] = { sibling, XCB_STACK_MODE_ABOVE };
-    xcb_configure_window(QX11Info::connection(), mAmor->winId(),
+    xcb_configure_window(x11Application->connection(), mAmor->winId(),
                          XCB_CONFIG_WINDOW_SIBLING | XCB_CONFIG_WINDOW_STACK_MODE,
                          values);
 }
@@ -762,7 +766,7 @@ void Amor::slotWindowChange(WId win, NET::Properties properties, NET::Properties
         // didn't fall in the working area before but it does now, then
         //  refocus on the current window so that the animation is
         // relocated.
-        QRect desktopArea = mWin->workArea();
+        QRect desktopArea = mX11Win->workArea();
 
         bool fitsInWorkArea = !( newTargetRect.y() - mCurrAnim->hotspot().y() + mConfig.mOffset < desktopArea.y() );
         if( ( !fitsInWorkArea && !mInDesktopBottom ) || ( fitsInWorkArea && mInDesktopBottom ) ) {

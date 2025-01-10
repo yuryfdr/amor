@@ -36,7 +36,7 @@ AmorConfig::AmorConfig()
 void AmorConfig::read()
 {
     KSharedConfig::Ptr config = KSharedConfig::openConfig();
-    KConfigGroup cs( config, "General" );
+    KConfigGroup cs( config, QLatin1String("General") );
 
     mOnTop = cs.readEntry( "OnTop", false );
     mOffset = cs.readEntry( "Offset", 0 );
@@ -51,7 +51,7 @@ void AmorConfig::read()
 void AmorConfig::write()
 {
     KSharedConfig::Ptr config = KSharedConfig::openConfig();
-    KConfigGroup cs( config, "General" );
+    KConfigGroup cs( config, QLatin1String("General") );
 
     cs.writeEntry( "OnTop", mOnTop );
     cs.writeEntry( "Offset", mOffset );
